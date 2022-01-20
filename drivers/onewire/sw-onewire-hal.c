@@ -2,7 +2,7 @@
 
 #include <zephyr.h>
 #include <device.h>
-
+#include <pm/device.h>
 #include <drivers/gpio.h>
 #include <drivers/onewire.h>
 
