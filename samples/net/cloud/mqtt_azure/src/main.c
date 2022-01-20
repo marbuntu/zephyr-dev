@@ -405,6 +405,8 @@ static int get_mqtt_broker_addrinfo(void)
 			CONFIG_SAMPLE_CLOUD_AZURE_HOSTNAME,
 			CONFIG_SAMPLE_CLOUD_AZURE_SERVER_PORT);
 
+			LOG_HEXDUMP_INF(net_sin(haddr->ai_addr)->sin_addr.s4_addr, 4, "IP %s" );
+
 			return 0;
 		}
 

@@ -87,7 +87,7 @@
 	#size-cells = <0>;
 	status = "okay";
 	miso-pin = <19>;
-	mosi-pin = <23>;
+	mosi-pin = <27>;
 	sclk-pin = <18>;
 	csel-pin = <5>;
 };

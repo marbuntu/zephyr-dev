@@ -1,0 +1,65 @@
+//
+//   Martin Anschuetz
+
+
+/ {
+
+    leds {
+        compatible = "gpio-leds";
+        ledtst: led_t {
+            gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+            label = "TEST";
+        };
+    };
+
+    onewire: onewire {
+        compatible = "sw-one-wire";
+        label = "onewire0";
+        status = "okay";
+
+        rd-gpios = <&gpiob 2 GPIO_ACTIVE_HIGH>;
+        wr-gpios = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+    };
+
+    aliases {
+        tuart = &usart1;
+        lora0 = &lora;
+        vext0 = &ledtst;
+        ow0 = &onewire;
+    };
+    
+};
+
+/*
+*&usart1 {
+*    pinctrl-0 = <&usart1_tx_pa9 &usart1_rx_pa10>;
+*    current-speed = <9600>;
+*    status = "okay";
+*    label = "uow0_bus";
+*
+*    uartow0: uartonewire0 {
+*        status = "okay";
+*        compatible = "uart-one-wire";
+*        label = "uow_0";
+*    };
+*};
+*/
+
+&spi1 {
+    status = "okay";
+    cs-gpios = <&gpiod 14 GPIO_ACTIVE_LOW>;
+    pinctrl-0 = <&spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7>;
+
+    lora: sx1276@0 {
+        compatible = "semtech,sx1276";
+        reg = <0>;
+        label = "sx1276";
+        reset-gpios = <&gpiod 15 GPIO_ACTIVE_LOW>;
+        dio-gpios = <&gpiof 15 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
+            <&gpioe 9 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
+            <&gpiof 13 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>;
+        rfi-enable-gpios = <&gpioa 3 GPIO_ACTIVE_HIGH>;
+        rfo-enable-gpios = <&gpioc 0 GPIO_ACTIVE_HIGH>;
+        spi-max-frequency = <1000000>;
+    };
+};

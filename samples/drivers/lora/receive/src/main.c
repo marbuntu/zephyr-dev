@@ -33,7 +33,7 @@ void main(void)
 		LOG_ERR("%s Device not ready", lora_dev->name);
 		return;
 	}
-
+/*
 	config.frequency = 865100000;
 	config.bandwidth = BW_125_KHZ;
 	config.datarate = SF_10;
@@ -41,7 +41,15 @@ void main(void)
 	config.coding_rate = CR_4_5;
 	config.tx_power = 14;
 	config.tx = false;
-
+*/
+	config.frequency = 865100000;
+	config.bandwidth = BW_250_KHZ;
+	config.datarate = SF_7;
+	config.preamble_len = 8;
+	config.coding_rate = CR_4_5;
+	config.tx_power = 4;
+	config.tx = false;
+	
 	ret = lora_config(lora_dev, &config);
 	if (ret < 0) {
 		LOG_ERR("LoRa config failed");

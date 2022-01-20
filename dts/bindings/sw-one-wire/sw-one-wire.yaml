@@ -1,0 +1,23 @@
+# Copyright (c) 2021 Martin Anschuetz
+# SPDX-License-Identifier: Apache-2.0
+
+description: Software Implemented 1-Wire Bus
+
+compatible: sw-one-wire
+
+include:
+    - name: base.yaml
+      property-allowlist: [label]
+
+properties:
+  label:
+    description: |
+      Human readable Label as String.
+      
+  rd-gpios:
+    type: phandle-array
+    required: true
+
+  wr-gpios:
+    type: phandle-array
+    required: true
