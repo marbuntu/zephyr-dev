@@ -1,0 +1,24 @@
+#
+# Copyright (c) 2020 Martin Anschuetz
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+#   One-Wire Bus Implementation
+#
+
+menuconfig ONEWIRE
+    bool "Enable Software One-Wire"
+    select GPIO
+    
+
+choice ONEWIRE_INTERFACE
+    bool "One-Wire Interface Selection"
+    default ONEWIRE_INTERFACE_SW
+
+    config ONEWIRE_INTERFACE_SW
+        bool "Software Implemented One-Wire"
+
+    config ONEWIRE_INTERFACE_UART
+        bool "One-Wire Implementation on top of UART"
+        
+endchoice
