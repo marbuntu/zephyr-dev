@@ -2,6 +2,9 @@
  * Copyright (c) 2020 Henrik Brix Andersen <henrik@brixandersen.dk>
  *
  * SPDX-License-Identifier: Apache-2.0
+ * 
+ * 
+ * Edit: M. Anschütz <martin.anschuetz@vert-tec.io>
  */
 
 #define DT_DRV_COMPAT xlnx_xps_spi_2_00_a
@@ -121,7 +124,12 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
 	const struct xlnx_quadspi_config *config = dev->config;
 	struct xlnx_quadspi_data *data = dev->data;
 	struct spi_context *ctx = &data->ctx;
-	uint32_t spissr = BIT_MASK(config->num_ss_bits);
+	uint32_t spissr;
+	
+	if (ctx->config->operation & SPI_CS_ACTIVE_HIGH)
+		spissr = 0;
+	else
+		spissr = BIT_MASK(config->num_ss_bits);
 
 	if (IS_ENABLED(CONFIG_SPI_SLAVE) && spi_context_is_slave(ctx)) {
 		/* Skip slave select assert/de-assert in slave mode */
@@ -129,8 +137,15 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
 	}
 
 	if (on) {
-		/* SPISSR is one-hot, active-low */
-		spissr &= ~BIT(ctx->config->slave);
+		if (ctx->config->operation & SPI_CS_ACTIVE_HIGH)
+		{
+			spissr |= BIT(ctx->config->slave);
+		}
+		else
+		{
+			/* SPISSR is one-hot, active-low */
+			spissr &= ~BIT(ctx->config->slave);
+		}
 	} else if (ctx->config->operation & SPI_HOLD_ON_CS) {
 		/* Skip slave select de-assert */
 		return;
@@ -166,11 +181,6 @@ static int xlnx_quadspi_configure(const struct device *dev,
 	if (spi_cfg->slave >= config->num_ss_bits) {
 		LOG_ERR("unsupported slave %d, num_ss_bits %d",
 			spi_cfg->slave, config->num_ss_bits);
-		return -ENOTSUP;
-	}
-
-	if (spi_cfg->operation & SPI_CS_ACTIVE_HIGH) {
-		LOG_ERR("unsupported CS polarity active high");
 		return -ENOTSUP;
 	}
 
